@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -6,52 +6,26 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
-  Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import carrinhoIcon from '../../../assets/carrinhoicon.png';
 import chatIcon from '../../../assets/chaticon.png';
-import { useCart } from '../Cart/CartContext';
 import { useNavigation } from '@react-navigation/native';
 
 const ProductScreen = () => {
   const navigation = useNavigation();
-  const { addToCart } = useCart();
-  const [products, setProducts] = useState([]);
+  const [familyMembers] = useState([
+    {
+      id: 1,
+      name: 'Maria Silva',
+      age: 82,
+      healthStatus: 'Saudável9',
+      message: 'Hoje participou de uma atividade de jardinagem.',
+      image: 'https://via.placeholder.com/200',
+    },
+  ]);
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  const fetchProducts = async () => {
-    try {
-      const response = await fetch('http://192.168.0.13:3000/api/product');
-      const data = await response.json();
-
-      if (response.status === 200) {
-        setProducts(data);
-      } else {
-        Alert.alert('Erro', 'Erro ao carregar produtos do servidor');
-      }
-    } catch (error) {
-      console.error('Erro ao carregar produtos:', error);
-      Alert.alert('Erro', 'Aconteceu um erro. Tente novamente mais tarde.');
-    }
-  };
-
-  const handleAddToCart = (productId) => {
-    const selectedProduct = products.find(
-      (product) => product.id === productId,
-    );
-
-    if (selectedProduct) {
-      addToCart(selectedProduct);
-      console.log(`Produto ${productId} adicionado à cesta!`);
-    }
-  };
-
-  const handleAddToFavorites = (productId) => {
-    console.log(`Produto ${productId} adicionado aos favoritos!`);
+  const goToUserPage = () => {
+    navigation.navigate('User');
   };
 
   const goToChatPage = () => {
@@ -62,11 +36,7 @@ const ProductScreen = () => {
     navigation.navigate('Cart');
   };
 
-  const goToUserPage = () => {
-    navigation.navigate('User');
-  };
-
-  const renderProductItem = ({ item }) => (
+  const renderFamilyMemberItem = ({ item }) => (
     <View style={styles.item}>
       <Image
         source={{ uri: item.image }}
@@ -75,20 +45,12 @@ const ProductScreen = () => {
       />
       <View style={styles.detailsContainer}>
         <Text style={styles.name}>{item.name}</Text>
-        <Text style={styles.description}>{item.description}</Text>
-        <Text style={styles.price}>{item.price}</Text>
+        <Text style={styles.age}>Idade: {item.age} anos</Text>
+        <Text style={styles.healthStatus}>Saúde: {item.healthStatus}</Text>
+        <Text style={styles.message}>{item.message}</Text>
       </View>
-      <TouchableOpacity
-        style={styles.cartButton}
-        onPress={() => handleAddToCart(item.id)}
-      >
-        <Text style={styles.buttonText}>Adicionar à Cesta</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.favoriteButton}
-        onPress={() => handleAddToFavorites(item.id)}
-      >
-        <Text style={styles.favoriteButtonText}>Adicionar aos Favoritos</Text>
+      <TouchableOpacity style={styles.chatButton} onPress={goToChatPage}>
+        <Text style={styles.buttonText}>Enviar Mensagem</Text>
       </TouchableOpacity>
     </View>
   );
@@ -96,26 +58,23 @@ const ProductScreen = () => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={products}
-        renderItem={renderProductItem}
+        data={familyMembers}
+        renderItem={renderFamilyMemberItem}
         keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={styles.productsList}
+        contentContainerStyle={styles.membersList}
       />
       <View style={styles.navBar}>
+        <TouchableOpacity style={styles.navBarButton} onPress={goToUserPage}>
+          <Ionicons name="document-text" size={30} color="#EAF6FF" />
+          <Text style={styles.navBarText}>Exames</Text>
+        </TouchableOpacity>
         <TouchableOpacity style={styles.navBarButton} onPress={goToChatPage}>
           <Image source={chatIcon} style={styles.icon} />
+          <Text style={styles.navBarText}>Conversar</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navBarButton} onPress={goToCartPage}>
-          <Image source={carrinhoIcon} style={styles.icon} />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navBarButton} onPress={goToUserPage}>
-          <Ionicons name="man" size={30} color="white" />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.navBarButton}
-          onPress={handleAddToFavorites}
-        >
-          <Ionicons name="heart" size={24} color="white" />
+          <Ionicons name="call" size={30} color="#EAF6FF" />
+          <Text style={styles.navBarText}>Ligar</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -125,25 +84,31 @@ const ProductScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F4EEE7',
+    backgroundColor: '#EAF6FF',
   },
   navBar: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    backgroundColor: '#2A9F85',
+    backgroundColor: '#1E90FF',
     paddingVertical: 10,
   },
   navBarButton: {
+    alignItems: 'center',
     padding: 10,
+  },
+  navBarText: {
+    color: '#EAF6FF',
+    fontSize: 12,
+    marginTop: 5,
   },
   icon: {
     width: 30,
     height: 30,
     resizeMode: 'contain',
-    tintColor: '#F4EEE7',
+    tintColor: '#EAF6FF',
   },
-  productsList: {
+  membersList: {
     paddingVertical: 20,
     paddingHorizontal: 20,
   },
@@ -167,23 +132,30 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 5,
     textAlign: 'center',
+    color: '#1E90FF',
   },
-  description: {
+  age: {
+    fontSize: 16,
+    marginBottom: 5,
+    textAlign: 'center',
+    color: '#000000',
+  },
+  healthStatus: {
     fontSize: 16,
     marginBottom: 10,
     textAlign: 'center',
+    color: '#000000',
   },
-  price: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#2A9F85',
+  message: {
+    fontSize: 14,
+    fontStyle: 'italic',
     marginBottom: 10,
+    textAlign: 'center',
+    color: '#666666',
   },
-  button: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#72AB86',
-    borderRadius: 8,
+  chatButton: {
+    backgroundColor: '#1E90FF',
+    borderRadius: 25,
     padding: 12,
     alignItems: 'center',
     marginVertical: 5,
@@ -191,31 +163,7 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#F4EEE7',
-  },
-  cartButton: {
-    backgroundColor: '#72AB86', // Cor para adicionar à cesta
-    borderRadius: 8,
-    padding: 12,
-    alignItems: 'center',
-    marginVertical: 5,
-  },
-  favoriteButton: {
-    backgroundColor: '#2A9F85', // Cor para adicionar aos favoritos
-    borderRadius: 8,
-    padding: 12,
-    alignItems: 'center',
-    marginVertical: 5,
-  },
-  buttonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#F4EEE7',
-  },
-  favoriteButtonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#F4EEE7',
+    color: '#FFFFFF',
   },
 });
 

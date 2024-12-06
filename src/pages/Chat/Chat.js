@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -9,7 +9,7 @@ import {
   Image,
 } from 'react-native';
 import { Ionicons, Entypo } from '@expo/vector-icons';
-import carrinhoIcon from '../../../assets/carrinhoicon.png';
+import carrinhoIcon from '../../../assets/carrinhoicon.png'; // Substitua pelo ícone que você usa
 import { useNavigation } from '@react-navigation/native';
 
 const Chat = () => {
@@ -19,25 +19,23 @@ const Chat = () => {
 
   const addMessageToChat = (text, sender) => {
     const newMessage = { text, sender };
-    setChat([...chat, newMessage]);
+    setChat((prevChat) => [...prevChat, newMessage]);
   };
 
   const sendMessage = () => {
     if (message.trim() !== '') {
       addMessageToChat(message, 'user');
+      setMessage('');
 
+      // Mensagem automática do bot
       setTimeout(() => {
-        addMessageToChat('Oi! Como posso ajudar?', 'bot');
+        addMessageToChat(
+          'Em breve seu dependente irá mandar mensagem de volta, assim que ele ver.',
+          'bot',
+        );
       }, 1000);
     }
   };
-
-  useEffect(() => {
-    // Exemplo de boas-vindas inicial do bot
-    setTimeout(() => {
-      addMessageToChat('Olá! Bem-vindo ao chat.', 'bot');
-    }, 500);
-  }, []);
 
   const goToHomePage = () => {
     navigation.navigate('ProductScreen');
@@ -80,22 +78,26 @@ const Chat = () => {
       </View>
       <View style={styles.navBar}>
         <TouchableOpacity style={styles.navBarButton} onPress={goToHomePage}>
-          <Entypo name="home" size={30} color="white" />
+          <Entypo name="home" size={30} color="#EAF6FF" />
+          <Text style={styles.navBarText}>Home</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navBarButton} onPress={goToCartPage}>
-          <Image source={carrinhoIcon} style={styles.icon} />
+          <Ionicons name="call" size={30} color="#EAF6FF" />
+          <Text style={styles.navBarText}>Ligar</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navBarButton} onPress={goToUserPage}>
-          <Ionicons name="man" size={30} color="white" />
+          <Ionicons name="document-text" size={30} color="#EAF6FF" />
+          <Text style={styles.navBarText}>Exames</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F4EEE7',
+    backgroundColor: '#EAF6FF',
   },
   chatContainer: {
     paddingTop: 20,
@@ -109,11 +111,11 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
   },
   botMessage: {
-    backgroundColor: '#2A9F85',
+    backgroundColor: '#1C60A0',
     alignSelf: 'flex-start',
   },
   userMessage: {
-    backgroundColor: '#FFD700',
+    backgroundColor: '#1E90FF',
     alignSelf: 'flex-end',
   },
   messageText: {
@@ -128,40 +130,44 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     borderWidth: 1,
-    borderColor: '#2A9F85',
+    borderColor: '#1E90FF',
     borderRadius: 5,
     paddingVertical: 8,
     paddingHorizontal: 10,
     marginRight: 10,
   },
   sendButton: {
-    backgroundColor: '#2A9F85',
+    backgroundColor: '#1E90FF',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
     alignItems: 'center',
   },
   sendButtonText: {
-    color: '#F4EEE7',
+    color: '#EAF6FF',
     fontWeight: 'bold',
   },
   navBar: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     alignItems: 'center',
-    backgroundColor: '#2A9F85',
+    backgroundColor: '#1E90FF',
     paddingVertical: 10,
-    paddingHorizontal: 20,
   },
   navBarButton: {
+    alignItems: 'center',
     padding: 10,
+  },
+  navBarText: {
+    color: '#EAF6FF',
+    fontSize: 12,
+    marginTop: 5,
   },
   icon: {
     width: 30,
     height: 30,
     resizeMode: 'contain',
-    tintColor: '#F4EEE7',
+    tintColor: '#EAF6FF',
   },
 });
-
 export default Chat;

@@ -5,47 +5,18 @@ import {
   View,
   TextInput,
   TouchableOpacity,
-  Alert,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { useNavigation } from '@react-navigation/native';
 import { Button, TextInput as PaperTextInput } from 'react-native-paper'; // Importando componentes do react-native-paper
-import httpservice from '../../routes/http';
 
 export default function AuthScreens() {
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const goToProductScreen = () => {
-    navigation.navigate('ProductScreen');
-  };
-
   const goToTelaCadastro = () => {
     navigation.navigate('TelaCadastro');
-  };
-
-  const login = async () => {
-    try {
-      const user = { email, password };
-      const result = await httpservice.login(user);
-      const data = await result.json();
-
-      if (result.status === 200) {
-        console.log('Mensagem de sucesso:', data.msg);
-        navigation.navigate('ProductScreen');
-      } else {
-        console.error('Mensagem de erro:', data.msg);
-        Alert.alert(
-          'Erro',
-          'Erro ao realizar o login. Tente novamente.',
-          data.msg,
-        );
-      }
-    } catch (error) {
-      console.error('Erro ao logar:', error);
-      Alert.alert('Erro', 'Aconteceu um erro. Tente novamente mais tarde.');
-    }
   };
 
   return (
@@ -77,7 +48,7 @@ export default function AuthScreens() {
           mode="contained"
           style={styles.button}
           labelStyle={styles.buttonText}
-          onPress={login}
+          onPress={() => navigation.navigate('ProductScreen')}
         >
           Acessar
         </Button>

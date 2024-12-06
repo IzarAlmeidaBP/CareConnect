@@ -3,22 +3,14 @@ import {
   View,
   Text,
   StyleSheet,
-  Image,
-  TextInput,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import chatIcon from '../../../assets/chaticon.png';
 
-const User = () => {
+const Exames = () => {
   const navigation = useNavigation();
-  const [name, setName] = useState('');
-  const [profilePic, setProfilePic] = useState(null);
-
-  const handleLogin = () => {};
-
-  const handleChoosePhoto = () => {};
 
   const goToHomePage = () => {
     navigation.navigate('ProductScreen');
@@ -34,34 +26,42 @@ const User = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.profileContainer}>
-        {profilePic ? (
-          <Image source={{ uri: profilePic }} style={styles.profileImage} />
-        ) : (
-          <TouchableOpacity
-            style={styles.addPhotoButton}
-            onPress={handleChoosePhoto}
-          >
-            <Ionicons name="camera" size={30} color="black" />
-            <Text>Adicionar Foto</Text>
+      <ScrollView contentContainerStyle={styles.examsContainer}>
+        <Text style={styles.title}>Lista de Exames</Text>
+        <View style={styles.examItem}>
+          <Text style={styles.examText}>Exame de Sangue</Text>
+          <TouchableOpacity style={styles.examButton}>
+            <Text style={styles.examButtonText}>Ver Resultados</Text>
           </TouchableOpacity>
-        )}
-        <TextInput
-          style={styles.nameInput}
-          placeholder="Nome"
-          value={name}
-          onChangeText={(text) => setName(text)}
-        />
-      </View>
+        </View>
+        <View style={styles.examItem}>
+          <Text style={styles.examText}>Exame de Urina</Text>
+          <TouchableOpacity style={styles.examButton}>
+            <Text style={styles.examButtonText}>Ver Resultados</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.examItem}>
+          <Text style={styles.examText}>Ressonância Magnética</Text>
+          <TouchableOpacity style={styles.examButton}>
+            <Text style={styles.examButtonText}>Ver Resultados</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.examItem}>
+          <Text style={styles.examText}>Raio-X</Text>
+          <TouchableOpacity style={styles.examButton}>
+            <Text style={styles.examButtonText}>Ver Resultados</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
       <View style={styles.navBar}>
         <TouchableOpacity style={styles.navBarButton} onPress={goToHomePage}>
           <Ionicons name="home" size={24} color="white" />
         </TouchableOpacity>
         <TouchableOpacity style={styles.navBarButton} onPress={goToCartPage}>
-          <Ionicons name="cart" size={24} color="white" />
+          <Ionicons name="call" size={24} color="white" />
         </TouchableOpacity>
         <TouchableOpacity style={styles.navBarButton} onPress={goToChatPage}>
-          <Image source={chatIcon} style={styles.icon} />
+          <Ionicons name="chatbubbles" size={24} color="white" />
         </TouchableOpacity>
       </View>
     </View>
@@ -71,51 +71,52 @@ const User = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F4EEE7',
-    justifyContent: 'center',
+    backgroundColor: '#F5F5F5',
     alignItems: 'center',
   },
-  profileContainer: {
-    alignItems: 'center',
+  examsContainer: {
+    padding: 20,
+    width: '100%',
   },
-  profileImage: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#1E90FF',
     marginBottom: 20,
-  },
-  addPhotoButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'black',
-    borderRadius: 10,
-    padding: 10,
-    marginBottom: 20,
-  },
-  nameInput: {
-    borderWidth: 1,
-    borderColor: 'black',
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 20,
-    width: 200,
     textAlign: 'center',
   },
-  loginButton: {
-    backgroundColor: '#2A9F85',
-    padding: 10,
-    borderRadius: 5,
+  examItem: {
+    backgroundColor: '#FFFFFF',
+    padding: 15,
+    marginVertical: 10,
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 5,
   },
-  loginButtonText: {
-    color: 'white',
+  examText: {
+    fontSize: 18,
+    color: '#1E90FF',
+  },
+  examButton: {
+    marginTop: 10,
+    backgroundColor: '#1E90FF',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  examButtonText: {
+    color: '#FFFFFF',
     fontWeight: 'bold',
   },
   navBar: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    backgroundColor: '#2A9F85',
+    backgroundColor: '#1E90FF',
     width: '100%',
     position: 'absolute',
     bottom: 0,
@@ -126,12 +127,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 10,
   },
-  icon: {
-    width: 24,
-    height: 24,
-    resizeMode: 'contain',
-    tintColor: '#F4EEE7',
-  },
 });
 
-export default User;
+export default Exames;
